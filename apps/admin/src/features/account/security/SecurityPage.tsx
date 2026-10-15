@@ -142,16 +142,16 @@ export function SecurityPage() {
 
   const securityQuery = useQuery({
     queryKey: ['account-security'],
-    queryFn: ({ signal }) => accountSecurityControllerGetSecurity(signal),
+    queryFn: ({ signal }) => accountSecurityControllerGetSecurity({ signal }),
   });
   const sessionsQuery = useQuery({
     queryKey: ['account-security-sessions'],
-    queryFn: ({ signal }) => accountSecurityControllerListSessions(signal),
+    queryFn: ({ signal }) => accountSecurityControllerListSessions({ signal }),
   });
   const activitiesQuery = useQuery({
     queryKey: ['account-security-activities', activityPage],
     queryFn: ({ signal }) =>
-      accountSecurityControllerGetLoginActivities({ page: activityPage, pageSize: 10 }, signal),
+      accountSecurityControllerGetLoginActivities({ page: activityPage, pageSize: 10 }, { signal }),
   });
 
   const refreshSecurity = async () => {
@@ -225,7 +225,7 @@ export function SecurityPage() {
   });
 
   const revokeOthersMutation = useMutation({
-    mutationFn: accountSecurityControllerRevokeOtherSessions,
+    mutationFn: () => accountSecurityControllerRevokeOtherSessions(),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['account-security-sessions'] });
       message.success('其他设备已全部下线');
